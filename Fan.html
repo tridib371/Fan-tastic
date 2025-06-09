@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Table Fan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-size: 2.8rem;
+        }
+
+        .subtitle {
+            color: #e0fcff;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .room {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: linear-gradient(to bottom, #a8c0ff, #3f2b96);
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            margin: 0 auto 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .window {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(160deg, #87CEEB, #E0F7FA);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            border: 5px solid #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .window-pane {
+            width: 90%;
+            height: 90%;
+            background: rgba(173, 216, 230, 0.3);
+            border: 2px solid #2c3e50;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            padding: 2px;
+        }
+
+        .pane {
+            background: rgba(135, 206, 235, 0.6);
+            border: 1px solid #2c3e50;
+        }
+
+        .table {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 30px;
+            background: linear-gradient(to bottom, #8B4513, #5d2e0c);
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .table-leg {
+            position: absolute;
+            bottom: -100px;
+            width: 20px;
+            height: 100px;
+            background: linear-gradient(to right, #654321, #3d280d);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .leg-left {
+            left: 100px;
+        }
+
+        .leg-right {
+            right: 100px;
+        }
+
+        .fan-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 1.5s ease-in-out;
+        }
+
+        .fan-base {
+            position: relative;
+            width: 100px;
+            height: 25px;
+            background: linear-gradient(to bottom, #808080, #5a5a5a);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .fan-neck {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 100px;
+            background: linear-gradient(to right, #606060, #404040);
+            border-radius: 5px;
+            z-index: 5;
+        }
+
+        .fan-head {
+            position: absolute;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100px;
+            background: radial-gradient(circle, #C0C0C0, #a0a0a0);
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .fan-blade {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 150px;
+            background: linear-gradient(to bottom, #222, #000);
+            transform-origin: center top;
+            border-radius: 20px 20px 5px 5px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .blade-1 {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .blade-2 {
+            transform: translate(-50%, -50%) rotate(120deg);
+        }
+
+        .blade-3 {
+            transform: translate(-50%, -50%) rotate(240deg);
+        }
+
+        .fan-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #4682B4, #2a5070);
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        .control-panel {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 35px;
+            background: linear-gradient(to bottom, #333, #111);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .power-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff0000, #cc0000);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .power-btn.on {
+            background: linear-gradient(145deg, #00cc00, #00aa00);
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+
+        .speed-indicator {
+            display: flex;
+            gap: 5px;
+        }
+
+        .speed-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.3s;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .speed-light.active {
+            background: #00ff00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+        }
+
+        .oscillation-btn {
+            width: 30px;
+            height: 20px;
+            background: #555;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+            transition: all 0.3s;
+        }
+
+        .oscillation-btn.active {
+            background: #4682B4;
+        }
+
+        .oscillation-knob {
+            width: 14px;
+            height: 14px;
+            background: #ddd;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .oscillation-btn.active .oscillation-knob {
+            transform: translateX(10px);
+            background: #fff;
+        }
+
+        .status {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 25px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            min-width: 200px;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .instructions ul {
+            text-align: left;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .feature-card p {
+            color: #555;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .blur-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: radial-gradient(circle at center, transparent, rgba(255, 255, 255, 0.3));
+        }
+
+        .decor {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .speed-label {
+            color: white;
+            font-size: 14px;
+            margin-top: 3px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Standard Table Fan</h1>
+            <p class="subtitle">Realistic simulation with three blades and multiple speed settings</p>
+        </header>
+
+        <div class="room">
+            <div class="window">
+                <div class="window-pane">
+                    <div class="pane"></div>
+                    <div class="pane"></div>
+                    <div class="pane"></div>
+                    <div class="pane"></div>
+                </div>
+            </div>
+
+            <div class="blur-effect"></div>
+
+            <div class="table">
+                <div class="table-leg leg-left"></div>
+                <div class="table-leg leg-right"></div>
+
+                <div class="fan-container">
+                    <div class="fan-base">
+                        <div class="fan-neck"></div>
+                        <div class="fan-head">
+                            <div class="fan-grill"></div>
+                            <div class="fan-blade blade-1"></div>
+                            <div class="fan-blade blade-2"></div>
+                            <div class="fan-blade blade-3"></div>
+                            <div class="fan-center"></div>
+                        </div>
+                        <div class="control-panel">
+                            <div class="power-btn" title="Power On/Off">P</div>
+                            <div class="speed-indicator">
+                                <div class="speed-light" title="Low Speed"></div>
+                                <div class="speed-light" title="Medium Speed"></div>
+                                <div class="speed-light" title="High Speed"></div>
+                            </div>
+                            <div class="oscillation-btn" title="Oscillation">
+                                <div class="oscillation-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="status">Fan is OFF</div>
+        </div>
+
+        <div class="instructions">
+            <h2>How to Use the Table Fan</h2>
+            <ul>
+                <li><strong>Power Button (P):</strong> Turns the fan on/off and cycles through speeds</li>
+                <li><strong>Speed Indicators:</strong> Show current speed level (Low, Medium, High)</li>
+                <li><strong>Oscillation Switch:</strong> Toggles fan head rotation on/off</li>
+                <li><strong>Click Power Button multiple times</strong> to change fan speed</li>
+            </ul>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>Three Black Blades</h3>
+                <p>Classic design with properly positioned blades for optimal airflow</p>
+            </div>
+            <div class="feature-card">
+                <h3>Multiple Speeds</h3>
+                <p>Low, medium and high settings for customized comfort</p>
+            </div>
+            <div class="feature-card">
+                <h3>Oscillation</h3>
+                <p>Wide-angle rotation for better air circulation</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const powerBtn = document.querySelector('.power-btn');
+        const fanBlades = document.querySelectorAll('.fan-blade');
+        const statusText = document.querySelector('.status');
+        const speedLights = document.querySelectorAll('.speed-light');
+        const oscillationBtn = document.querySelector('.oscillation-btn');
+        const fanContainer = document.querySelector('.fan-container');
+        const blurEffect = document.querySelector('.blur-effect');
+
+        let isOn = false;
+        let animationId;
+        let rotationAngle = 0;
+        let speed = 0;
+        let currentSpeed = 0; // 0: off, 1: low, 2: medium, 3: high
+        let isOscillating = false;
+        let oscillationDirection = 1;
+        let oscillationAngle = 0;
+        let oscillationId;
+
+        // Function to update speed lights
+        function updateSpeedLights() {
+            speedLights.forEach((light, index) => {
+                if (index < currentSpeed) {
+                    light.classList.add('active');
+                } else {
+                    light.classList.remove('active');
+                }
+            });
+        }
+
+        // Function to update fan status text
+        function updateStatusText() {
+            if (!isOn) {
+                statusText.textContent = 'Fan is OFF';
+                return;
+            }
+
+            const speedText = ['Low', 'Medium', 'High'][currentSpeed - 1];
+            const oscillationText = isOscillating ? ' with Oscillation' : '';
+            statusText.textContent = `Fan is ON (${speedText} Speed${oscillationText})`;
+        }
+
+        // Function to start oscillation
+        function startOscillation() {
+            if (!isOscillating) return;
+
+            const maxAngle = 60; // Maximum oscillation angle in degrees
+
+            oscillationAngle += oscillationDirection * 0.5;
+
+            if (Math.abs(oscillationAngle) >= maxAngle) {
+                oscillationDirection *= -1;
+            }
+
+            fanContainer.style.transform = `translate(-50%, -50%) rotate(${oscillationAngle}deg)`;
+
+            oscillationId = requestAnimationFrame(startOscillation);
+        }
+
+        // Function to stop oscillation
+        function stopOscillation() {
+            cancelAnimationFrame(oscillationId);
+
+            // Smoothly return to center position
+            const returnToCenter = () => {
+                if (Math.abs(oscillationAngle) > 0.5) {
+                    oscillationAngle *= 0.9;
+                    fanContainer.style.transform = `translate(-50%, -50%) rotate(${oscillationAngle}deg)`;
+                    requestAnimationFrame(returnToCenter);
+                } else {
+                    oscillationAngle = 0;
+                    fanContainer.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+                }
+            };
+
+            returnToCenter();
+        }
+
+        // Function to animate the fan blades
+        function animateFan() {
+            rotationAngle += speed;
+
+            fanBlades.forEach((blade, index) => {
+                // Each blade should maintain its 120-degree separation
+                const bladeAngle = rotationAngle + (index * 120);
+                blade.style.transform = `translate(-50%, -50%) rotate(${bladeAngle}deg)`;
+            });
+
+            // Add blur effect when fan is at high speed
+            if (currentSpeed === 3) {
+                blurEffect.style.opacity = 0.7;
+            } else if (currentSpeed === 2) {
+                blurEffect.style.opacity = 0.3;
+            } else {
+                blurEffect.style.opacity = 0;
+            }
+
+            animationId = requestAnimationFrame(animateFan);
+        }
+
+        // Function to start the fan
+        function startFan() {
+            // Set speed based on currentSpeed
+            speed = [0, 2, 4, 8][currentSpeed];
+
+            // If fan was off, start animation
+            if (animationId === undefined) {
+                animateFan();
+            }
+
+            updateSpeedLights();
+            updateStatusText();
+
+            // Start oscillation if enabled
+            if (isOscillating) {
+                startOscillation();
+            }
+        }
+
+        // Function to stop the fan
+        function stopFan() {
+            // Smoothly slow down the fan
+            const slowDown = () => {
+                if (speed > 0.1) {
+                    speed *= 0.92;
+                    rotationAngle += speed;
+
+                    fanBlades.forEach((blade, index) => {
+                        const bladeAngle = rotationAngle + (index * 120);
+                        blade.style.transform = `translate(-50%, -50%) rotate(${bladeAngle}deg)`;
+                    });
+
+                    animationId = requestAnimationFrame(slowDown);
+                } else {
+                    speed = 0;
+                    rotationAngle = 0;
+                    cancelAnimationFrame(animationId);
+                    animationId = undefined;
+                    blurEffect.style.opacity = 0;
+
+                    // Reset blades to their original positions
+                    fanBlades.forEach((blade, index) => {
+                        blade.style.transform = `translate(-50%, -50%) rotate(${index * 120}deg)`;
+                    });
+                }
+            };
+
+            slowDown();
+
+            // Stop oscillation
+            stopOscillation();
+
+            updateSpeedLights();
+            updateStatusText();
+        }
+
+        // Power button click handler
+        powerBtn.addEventListener('click', function () {
+            if (!isOn) {
+                // Turn fan on at low speed
+                isOn = true;
+                currentSpeed = 1;
+                this.classList.add('on');
+                startFan();
+            } else {
+                // Cycle through speeds
+                currentSpeed++;
+
+                if (currentSpeed > 3) {
+                    // Turn fan off after high speed
+                    isOn = false;
+                    currentSpeed = 0;
+                    this.classList.remove('on');
+                    stopFan();
+                } else {
+                    // Increase speed
+                    startFan();
+                }
+            }
+        });
+
+        // Oscillation button click handler
+        oscillationBtn.addEventListener('click', function () {
+            if (!isOn) return;
+
+            isOscillating = !isOscillating;
+            this.classList.toggle('active');
+
+            if (isOscillating) {
+                startOscillation();
+            } else {
+                stopOscillation();
+            }
+
+            updateStatusText();
+        });
+
+        // Add decorative elements to the room
+        document.addEventListener('DOMContentLoaded', function () {
+            const room = document.querySelector('.room');
+
+            // Add decorative elements
+            for (let i = 0; i < 5; i++) {
+                const decor = document.createElement('div');
+                decor.className = 'decor';
+                decor.style.width = Math.random() * 30 + 10 + 'px';
+                decor.style.height = decor.style.width;
+                decor.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+                decor.style.top = Math.random() * 300 + 'px';
+                decor.style.left = Math.random() * 700 + 'px';
+                room.appendChild(decor);
+            }
+
+            // Initialize blade positions
+            fanBlades.forEach((blade, index) => {
+                blade.style.transform = `translate(-50%, -50%) rotate(${index * 120}deg)`;
+            });
+        });
+    </script>
+</body>
+
+</html>
